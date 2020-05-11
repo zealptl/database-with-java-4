@@ -10,8 +10,8 @@ public class Table {
             Connection conn = ConnectDB.getConnection();
             PreparedStatement stmt1 = conn.prepareStatement("DROP TABLE IF EXISTS Students");
             stmt1.executeUpdate();
-            PreparedStatement stmt2 = conn.prepareStatement("create table IF NOT EXISTS Students(studentID int, firstName varchar(255), lastName varchar(255), sex varchar(1), " +
-                    "CONSTRAINT chk_sex CHECK (Sex IN ('F', 'M')), PRIMARY KEY (studentID))");
+            PreparedStatement stmt2 = conn.prepareStatement("create table IF NOT EXISTS Students(studentID int, firstName varchar(255), lastName varchar(255), email varchar(255), sex varchar(1), " +
+                    "PRIMARY KEY (studentID))");
             stmt2.executeUpdate();
             System.out.println("Student table created!");
             conn.close();
