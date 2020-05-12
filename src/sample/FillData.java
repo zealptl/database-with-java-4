@@ -20,7 +20,6 @@ public class FillData {
                 records.add(Arrays.asList(values));
             }
         }
-        System.out.println(records);
         return records;
     }
 

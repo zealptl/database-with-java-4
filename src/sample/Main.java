@@ -2,25 +2,84 @@ package sample;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.w3c.dom.Text;
 
-import java.sql.Connection;
+import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.show();
-    }
+        primaryStage.setTitle("School System");
 
+        // Declaring necessary UI elements
+        BorderPane border = new BorderPane();
+        VBox inputMenu = new VBox();
+        Group group = new Group();
+        int w = 1250, h = 950;
+        Canvas canvas = new Canvas();
+        GraphicsContext gc = canvas.getGraphicsContext2D();
 
-    public static void main(String[] args) throws Exception {
+        // Designing the left input section
+        border.setLeft(inputMenu);
+        inputMenu.setPadding(new Insets(15,10,15,10));
+        inputMenu.setSpacing(10);
+        inputMenu.setStyle("-fx-background-color: #b2bec3");
+        inputMenu.setAlignment(Pos.TOP_LEFT);
+
+        Label courseLabel = new Label("CourseID: ");
+        TextField courseField = new TextField();
+        courseField.setPromptText("Enter course ID");
+
+        Label yearLabel = new Label("Year: ");
+        TextField yearField = new TextField();
+        yearField.setPromptText("Enter year");
+
+        Label semesterLabel = new Label("Semester: ");
+        TextField semesterField = new TextField();
+        semesterField.setPromptText("Enter Semester");
+
+        Button addBtn = new Button("Enter");
+        inputMenu.getChildren().addAll(courseLabel,courseField,yearLabel,yearField,semesterLabel,semesterField,addBtn);
+
+        // Adding group to center of layout to draw the pie chart
+        group.getChildren().add(canvas);
+        border.setCenter(group);
+
+        // Event listener to listen for button click and then draw pie chart
+        addBtn.setOnAction(e -> {
+            RetrieveData retrieve = new RetrieveData();
+            String courseInput = courseField.getText();
+            String yearInput = yearField.getText();
+            String semesterInput = semesterField.getText();
+            LinkedHashMap<String, Integer> data = new LinkedHashMap<>();
+            try {
+                data = retrieve.getData(courseInput, yearInput, semesterInput);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            MyPieChart pieChart = new MyPieChart(w*0.3, h*3,300,300);
+            pieChart.draw(gc, data);
+        });
+
         Table schoolDB = new Table();
         schoolDB.createStudentTable();
         schoolDB.createCoursesTable();
@@ -33,6 +92,14 @@ public class Main extends Application {
         data.insertStudentData(students);
         data.insertCoursesData(courses);
         data.insertClassesData(classes);
-        launch(args);
+
+
+        Scene scene = new Scene(border, w, h);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
     }
+
+
+    public static void main(String[] args) throws Exception { launch(args); }
 }
