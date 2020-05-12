@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 public class RetrieveData {
     public LinkedHashMap<String, Integer> getData(String course, String year, String semester) throws Exception {
         Connection conn = ConnectDB.getConnection();
-        String query = "SELECT courseID, GPA FROM Classes WHERE courseID = ? && year = ? && semester = ?";
+        String query = "SELECT GPA FROM Classes WHERE courseID = ? && year = ? && semester = ?";
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setString(1, course);
         stmt.setString(2, year);
@@ -19,24 +19,34 @@ public class RetrieveData {
 
         ResultSet rs = stmt.executeQuery();
 
-        LinkedHashMap<String, Integer> gpaData = new LinkedHashMap<>();
-        gpaData.put("A",0);
-        gpaData.put("B",0);
-        gpaData.put("C",0);
-        gpaData.put("D",0);
-        gpaData.put("F",0);
-        gpaData.put("W",0);
+        if (!rs.next()) {
+            System.out.println("Data Not Found :(");
+            return null;
+        } else {
+            LinkedHashMap<String, Integer> gpaData = new LinkedHashMap<>();
+            gpaData.put("A", 0);
+            gpaData.put("B", 0);
+            gpaData.put("C", 0);
+            gpaData.put("D", 0);
+            gpaData.put("F", 0);
+            gpaData.put("W", 0);
 
-        while (rs.next()) {
-            String gpa = rs.getString("GPA");
-            gpaData.put(gpa, gpaData.get(gpa) + 1);
+            while (rs.next()) {
+                String gpa = rs.getString("GPA");
+                gpaData.put(gpa, gpaData.get(gpa) + 1);
+            }
+
+            System.out.println(gpaData);
+
+            return gpaData;
         }
-
-        System.out.println(gpaData);
-
-        return gpaData;
-
     }
+
+//    private ResultSet retrieveAllCourse(String year, String semester) throws Exception {
+//        Connection conn = ConnectDB.getConnection();
+//        String query = "SELECT "
+//
+//    }
 
 
 }

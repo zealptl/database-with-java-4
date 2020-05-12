@@ -4,6 +4,8 @@ package sample;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.scene.text.Font;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,53 +29,31 @@ public class MyPieChart extends MyShape {
     }
 
     public MyPieChart(int n, double xLength, double yLength) {
-        super(0,0);
+        super(0, 0);
         this.xLength = xLength;
         this.yLength = yLength;
     }
 
     public MyPieChart(int n) {
-        super(0,0);
+        super(0, 0);
     }
-
-//    MyPieChart specific methods
-//    private LinkedHashMap<String, Double> getPieChartData(LinkedHashMap<Character, Double> data) {
-//        LinkedHashMap<String, Double> tempData = new LinkedHashMap<>();
-//        Iterator<Map.Entry<Character, Double>> itr = data.entrySet().iterator();
-//        int i = 0;
-//        double remaining = 0;
-//
-//        while (itr.hasNext()) {
-//            Map.Entry<Character, Double> entry = itr.next();
-//            if (i < this.n) {
-//                tempData.put(String.valueOf(entry.getKey()), entry.getValue());
-//                i++;
-//            } else {
-//                remaining += entry.getValue();
-//            }
-//
-//        }
-//        tempData.put("All other letters", remaining);
-//        return tempData;
-//    }
 
     //Overridden methods from MyShape
     public String toString() {
         return null;
     }
+
     public void draw(GraphicsContext gc) {
     }
-    public void draw(GraphicsContext gc, LinkedHashMap<String, Integer> pieChartData) {
 
+    public void draw(GraphicsContext gc, LinkedHashMap<String, Integer> pieChartData) {
+        // Calculate total number of students matching the query
         int totalStudent = 0;
         for (int val : pieChartData.values()) {
             totalStudent += val;
         }
 
         double degreePerPerson = (double) 360 / totalStudent;
-
-        System.out.println(totalStudent);
-        System.out.println(degreePerPerson);
 
         //Variables to create the legend
         int rectX = 850;
@@ -86,34 +66,38 @@ public class MyPieChart extends MyShape {
         int y_label2 = 50;
         double arcAngle;
 
+        // Clears canvas before drawing
+        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+
         for (Map.Entry<String, Integer> entry : pieChartData.entrySet()) {
-            System.out.println(entry.getValue());
+
+            // Drawing the pie chart slices
             arcAngle = entry.getValue() * degreePerPerson;
-            System.out.println(arcAngle);
             gc.setFill(color.getRandomColor());
-            gc.fillArc(x*0.8, y*0.02, xLength, yLength, startAngle, arcAngle, ArcType.ROUND);
+            gc.setFont(new Font("Arial", 15));
+            gc.fillArc(x * 0.8, y * 0.02, xLength, yLength, startAngle, arcAngle, ArcType.ROUND);
             startAngle += arcAngle;
 
             //Creating legend by creating a rectangle of appropriate color and putting appropriate values
             if (yCord > xCord && rectY > xCord) {
                 gc.fillRect(x_label, y_label, 50, 30);
-                gc.fillText(entry.getKey() + ", " + (double) Math.round(entry.getValue() * 10000) / 10000, x_label2, y_label2);
+                gc.fillText(entry.getKey() + ", " + (int) Math.round(entry.getValue() * 10000) / 10000, x_label2, y_label2);
                 y_label2 += 40;
                 y_label += 40;
             } else {
                 gc.fillRect(rectX, rectY, 50, 30);
-                gc.fillText(entry.getKey() + ", " + (double) Math.round(entry.getValue() * 10000) / 10000, xCord, yCord);
+                gc.fillText(entry.getKey() + ", " + (int) Math.round(entry.getValue() * 10000) / 10000, xCord, yCord);
                 rectY += 40;
                 yCord += 40;
             }
         }
-        System.out.println("DRAW SUCCESSFUL");
     }
 
     //Overridden methods from MyShapePosition
     public MyRectangle getBoundingBox() {
-        return new MyRectangle(0,0,0,0);
+        return new MyRectangle(0, 0, 0, 0);
     }
+
     public boolean doOverlap(MyShape shape2) {
         return doMyRectangleOverlap(this.getBoundingBox(), shape2.getBoundingBox());
     }

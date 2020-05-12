@@ -11,9 +11,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.LinkedHashMap;
@@ -22,7 +22,7 @@ import java.util.List;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("School System");
 
         // Declaring necessary UI elements
@@ -35,7 +35,7 @@ public class Main extends Application {
 
         // Designing the left input section
         border.setLeft(inputMenu);
-        inputMenu.setPadding(new Insets(15,10,15,10));
+        inputMenu.setPadding(new Insets(15, 10, 15, 10));
         inputMenu.setSpacing(10);
         inputMenu.setStyle("-fx-background-color: #b2bec3");
         inputMenu.setAlignment(Pos.TOP_LEFT);
@@ -53,12 +53,11 @@ public class Main extends Application {
         semesterField.setPromptText("Enter Semester");
 
         Button addBtn = new Button("Enter");
-        inputMenu.getChildren().addAll(courseLabel,courseField,yearLabel,yearField,semesterLabel,semesterField,addBtn);
+        inputMenu.getChildren().addAll(courseLabel, courseField, yearLabel, yearField, semesterLabel, semesterField, addBtn);
 
         // Adding group to center of layout to draw the pie chart
         group.getChildren().add(canvas);
         border.setCenter(group);
-
 
 
         // Event listener to listen for button click and then draw pie chart
@@ -74,8 +73,18 @@ public class Main extends Application {
                 ex.printStackTrace();
             }
 
-            MyPieChart pieChart = new MyPieChart(w*0.3, h*3,300,300);
-            pieChart.draw(gc, data);
+            if (data == null) {
+                gc.clearRect(0,0,canvas.getWidth(),canvas.getHeight());
+                gc.setFont(new Font("Arial", 36));
+                gc.setFill(Color.BLACK);
+                gc.fillText("Data Not Found", w * 0.3, h * 0.3);
+            } else {
+                MyPieChart pieChart = new MyPieChart(w * 0.3, h * 3, 300, 300);
+                pieChart.draw(gc, data);
+            }
+            courseField.clear();
+            yearField.clear();
+            semesterField.clear();
         });
 
         Table schoolDB = new Table();
@@ -99,5 +108,7 @@ public class Main extends Application {
     }
 
 
-    public static void main(String[] args) throws Exception { launch(args); }
+    public static void main(String[] args) throws Exception {
+        launch(args);
+    }
 }
