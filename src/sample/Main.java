@@ -100,7 +100,6 @@ public class Main extends Application {
         data.insertCoursesData(courses);
         data.insertClassesData(classes);
 
-
         Scene scene = new Scene(border, w, h);
         primaryStage.setScene(scene);
         primaryStage.show();

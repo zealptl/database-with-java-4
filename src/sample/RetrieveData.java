@@ -1,6 +1,5 @@
 package sample;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,7 +25,6 @@ public class RetrieveData {
         } else if (course.equals("all") && year.equals("all") && semester.equals("all")) {
             stmt = retrieveAllGPA();
         } else {
-            String query = "SELECT GPA FROM Classes WHERE courseID = ? && year = ? && semster = ?";
             stmt = retrieve(course, year, semester);
         }
 

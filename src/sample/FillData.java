@@ -24,7 +24,7 @@ public class FillData {
 
     public void insertStudentData(List<List<String>> data) throws Exception {
         Connection conn = ConnectDB.getConnection();
-        String query = "insert into Students (studentID, firstName, lastName, email, sex)" + "values(?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Students (studentID, firstName, lastName, email, sex)" + "VALUES(?, ?, ?, ?, ?)";
         for(List<String> d : data) {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, Integer.parseInt(d.get(0)));
@@ -41,7 +41,7 @@ public class FillData {
 
     public void insertCoursesData(List<List<String>> data) throws Exception {
         Connection conn = ConnectDB.getConnection();
-        String query = "insert into Courses (courseId, courseTitle, department)" + "values(?, ?, ?)";
+        String query = "INSERT INTO Courses (courseId, courseTitle, department)" + "VALUES(?, ?, ?)";
         for (List<String> d : data) {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, d.get(0));
@@ -55,7 +55,7 @@ public class FillData {
 
     public void insertClassesData(List<List<String>> data) throws Exception {
         Connection conn = ConnectDB.getConnection();
-        String query = "insert into Classes (courseID, courseSection, studentID, year, Semester, GPA)" + "values(?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Classes (courseID, courseSection, studentID, year, Semester, GPA)" + "VALUES(?, ?, ?, ?, ?, ?)";
         for (List<String> d : data) {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, d.get(0));
