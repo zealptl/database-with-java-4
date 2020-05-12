@@ -2,6 +2,7 @@ package sample;
 
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -12,7 +13,6 @@ public class MyPieChart extends MyShape {
     //Variables
     private double xLength;
     private double yLength;
-    private double arcAngle;
     private double startAngle = 0;
 
     //Constructor
@@ -36,7 +36,7 @@ public class MyPieChart extends MyShape {
         super(0,0);
     }
 
-    //MyPieChart specific methods
+//    MyPieChart specific methods
 //    private LinkedHashMap<String, Double> getPieChartData(LinkedHashMap<Character, Double> data) {
 //        LinkedHashMap<String, Double> tempData = new LinkedHashMap<>();
 //        Iterator<Map.Entry<Character, Double>> itr = data.entrySet().iterator();
@@ -65,6 +65,16 @@ public class MyPieChart extends MyShape {
     }
     public void draw(GraphicsContext gc, LinkedHashMap<String, Integer> pieChartData) {
 
+        int totalStudent = 0;
+        for (int val : pieChartData.values()) {
+            totalStudent += val;
+        }
+
+        double degreePerPerson = (double) 360 / totalStudent;
+
+        System.out.println(totalStudent);
+        System.out.println(degreePerPerson);
+
         //Variables to create the legend
         int rectX = 850;
         int rectY = 50;
@@ -74,10 +84,12 @@ public class MyPieChart extends MyShape {
         int y_label = 30;
         int x_label2 = 690;
         int y_label2 = 50;
-
+        double arcAngle;
 
         for (Map.Entry<String, Integer> entry : pieChartData.entrySet()) {
-            arcAngle = entry.getValue() * 360;
+            System.out.println(entry.getValue());
+            arcAngle = entry.getValue() * degreePerPerson;
+            System.out.println(arcAngle);
             gc.setFill(color.getRandomColor());
             gc.fillArc(x*0.8, y*0.02, xLength, yLength, startAngle, arcAngle, ArcType.ROUND);
             startAngle += arcAngle;
