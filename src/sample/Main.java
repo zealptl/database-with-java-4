@@ -14,8 +14,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -40,6 +43,128 @@ public class Main extends Application {
         inputMenu.setStyle("-fx-background-color: #b2bec3");
         inputMenu.setAlignment(Pos.TOP_LEFT);
 
+        // Add to Database form
+        Text add = new Text("Add Elements:");
+        add.setFont(new Font("Arial", 24));
+        inputMenu.getChildren().add(add);
+
+        Label addTable = new Label("Table: ");
+        TextField tableInput = new TextField();
+        tableInput.setPromptText("Enter table name");
+
+        Label dataFields = new Label("Data fields: ");
+        TextField dataFieldsInput = new TextField();
+        dataFieldsInput.setPromptText("Enter comma separated values");
+
+        Button insertBtn = new Button("Insert");
+
+        inputMenu.getChildren().addAll(addTable, tableInput, dataFields, dataFieldsInput, insertBtn);
+
+        insertBtn.setOnAction(e -> {
+            String tableToInsert = tableInput.getText();
+            String input = dataFieldsInput.getText();
+            List<String> inputs = Arrays.asList(input.trim().split("\\s*,\\s*"));
+            List<List<String>> data = new ArrayList<>();
+            data.add(inputs);
+
+
+            FillData fillData = new FillData();
+
+
+            switch (tableToInsert) {
+                case "Students":
+                    try {
+                        System.out.println("ENTERED STUDENTS SECTION");
+                        fillData.insertStudentData(data);
+                        System.out.println("Student Entry Successful");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case "Courses":
+                    try {
+                        fillData.insertCoursesData(data);
+                        System.out.println("Course Entry Successful");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case "Classes":
+                    try {
+                        fillData.insertStudentData(data);
+                        System.out.println("Class Entry Successful");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+            }
+            tableInput.clear();
+            dataFieldsInput.clear();
+        });
+
+        // Delete from database form
+        Text delete = new Text("Delete Elements:");
+        delete.setFont(new Font("Arial", 24));
+        inputMenu.getChildren().add(delete);
+
+        Label deleteTable = new Label("Table: ");
+        TextField deleteTableInput = new TextField();
+        deleteTableInput.setPromptText("Enter table name: ");
+
+        Label deleteDataFields = new Label("Data fields");
+        TextField deleteDataFieldsInput = new TextField();
+        deleteDataFieldsInput.setPromptText("Enter comma separated values");
+
+        Button deleteBtn = new Button("Delete");
+
+        deleteBtn.setOnAction(e -> {
+            String tableToDeleteFrom = deleteTableInput.getText();
+            FillData fillData = new FillData();
+
+            switch (tableToDeleteFrom) {
+                case "Students": {
+                    String input = deleteDataFieldsInput.getText();
+                    try {
+                        fillData.deleteStudentData(input);
+                        System.out.println("Student Deletion Successful");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                }
+                case "Courses": {
+                    String input = deleteDataFieldsInput.getText();
+                    try {
+                        fillData.deleteCoursesData(input);
+                        System.out.println("Course Deletion Successful");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                }
+                case "Classes": {
+                    String input = deleteDataFieldsInput.getText();
+                    List<String> inputs = Arrays.asList(input.trim().split("\\s*,\\s*"));
+                    try {
+                        fillData.deleteClassesData(inputs);
+                        System.out.println("Class Deletion Successful");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                }
+            }
+            deleteTableInput.clear();
+            deleteDataFieldsInput.clear();
+        });
+
+        inputMenu.getChildren().addAll(deleteTable, deleteTableInput, deleteDataFields, deleteDataFieldsInput, deleteBtn);
+
+        // Search from database form
+        Text search = new Text("Search Elements:");
+        search.setFont(new Font("Arial", 24));
+        inputMenu.getChildren().add(search);
+
         Label courseLabel = new Label("CourseID: ");
         TextField courseField = new TextField();
         courseField.setPromptText("Enter course ID");
@@ -54,11 +179,6 @@ public class Main extends Application {
 
         Button addBtn = new Button("Enter");
         inputMenu.getChildren().addAll(courseLabel, courseField, yearLabel, yearField, semesterLabel, semesterField, addBtn);
-
-        // Adding group to center of layout to draw the pie chart
-        group.getChildren().add(canvas);
-        border.setCenter(group);
-
 
         // Event listener to listen for button click and then draw pie chart
         addBtn.setOnAction(e -> {
@@ -87,6 +207,35 @@ public class Main extends Application {
             semesterField.clear();
         });
 
+        //Show Table to Console Form
+        Text display = new Text("Display Table:");
+        display.setFont(new Font("Arial", 24));
+        inputMenu.getChildren().add(display);
+
+        Label tableToDisplay = new Label("Table: ");
+        TextField tableToDisplayInput = new TextField();
+        tableToDisplayInput.setPromptText("Enter table name");
+
+        Button displayBtn = new Button("Display");
+
+        inputMenu.getChildren().addAll(tableToDisplay, tableToDisplayInput, displayBtn);
+
+        displayBtn.setOnAction(e -> {
+            String table = tableToDisplayInput.getText();
+            RetrieveData rd = new RetrieveData();
+            try {
+                rd.retrieveEntireTable(table);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+
+        // Adding group to center of layout to draw the pie chart
+        group.getChildren().add(canvas);
+        border.setCenter(group);
+
+        // Creating tables and filling the tables
         Table schoolDB = new Table();
         schoolDB.createStudentTable();
         schoolDB.createCoursesTable();

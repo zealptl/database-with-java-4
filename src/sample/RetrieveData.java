@@ -54,6 +54,52 @@ public class RetrieveData {
         }
     }
 
+    public void retrieveEntireTable(String tableName) throws Exception {
+        Connection conn = ConnectDB.getConnection();
+        String query;
+        switch (tableName) {
+            case "Students":
+                query = "SELECT * FROM Students";
+                break;
+            case "Courses":
+                query = "SELECT * FROM Courses";
+                break;
+            case "Classes":
+                query = "SELECT * FROM Classes";
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + tableName);
+        }
+        PreparedStatement stmt = conn.prepareStatement(query);
+
+
+        ResultSet rs = stmt.executeQuery();
+
+        switch (tableName) {
+            case "Students":
+                while (rs.next()) {
+                    System.out.println("Student ID: " + rs.getString("studentID") + ", First Name: " + rs.getString("firstName") +
+                            ", Last Name: " + rs.getString("lastName") + "Email: " + rs.getString("email") + ", Sex: " +
+                            rs.getString("sex"));
+                }
+                break;
+            case "Courses":
+                while (rs.next()) {
+                    System.out.println("Course ID: " + rs.getString("courseID") + ", Courses Title: " + rs.getString("Course Title: ") +
+                            ", Department: " + rs.getString("department"));
+                }
+                break;
+            case "Classes":
+                while (rs.next()) {
+                    System.out.println("Course ID: " + rs.getString("courseID") + ", Course Section: " + rs.getString("courseSection") +
+                            ", Student ID: " + rs.getString("studentID") + ", Year: " + rs.getString("year") +
+                            ", Semeseter: " + rs.getString("semester") + ", GPA: " + rs.getString("GPA") );
+                }
+                break;
+        }
+
+    }
+
     private PreparedStatement retrieveAllCourse(String year, String semester) throws Exception {
         Connection conn = ConnectDB.getConnection();
         String query = "SELECT GPA FROM Classes where year = ? && semester = ?";

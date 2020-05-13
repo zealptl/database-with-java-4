@@ -69,4 +69,33 @@ public class FillData {
         System.out.println("All entries successful!");
         conn.close();
     }
+
+    public void deleteStudentData(String data) throws Exception {
+        Connection conn = ConnectDB.getConnection();
+        String query = "DELETE FROM Students WHERE studentID = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1, data);
+        stmt.execute();
+        conn.close();
+    }
+
+    public void deleteCoursesData(String data) throws Exception {
+        Connection conn = ConnectDB.getConnection();
+        String query = "DELETE FROM Courses WHERE courseID = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1,data);
+        stmt.execute();
+        conn.close();
+    }
+
+    public void deleteClassesData(List<String> data) throws Exception {
+        Connection conn = ConnectDB.getConnection();
+        String query = "DELETE FROM Classes WHERE courseID = ? &&  courseSection = ? && studentID = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1,data.get(0));
+        stmt.setString(2,data.get(1));
+        stmt.setString(3,data.get(2));
+        stmt.execute();
+        conn.close();
+    }
 }
