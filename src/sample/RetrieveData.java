@@ -79,7 +79,7 @@ public class RetrieveData {
             case "Students":
                 while (rs.next()) {
                     System.out.println("Student ID: " + rs.getString("studentID") + ", First Name: " + rs.getString("firstName") +
-                            ", Last Name: " + rs.getString("lastName") + "Email: " + rs.getString("email") + ", Sex: " +
+                            ", Last Name: " + rs.getString("lastName") + ", Email: " + rs.getString("email") + ", Sex: " +
                             rs.getString("sex"));
                 }
                 break;

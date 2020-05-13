@@ -17,6 +17,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -68,14 +71,14 @@ public class Main extends Application {
             data.add(inputs);
 
 
-            FillData fillData = new FillData();
+            ManageData manageData = new ManageData();
 
 
             switch (tableToInsert) {
                 case "Students":
                     try {
                         System.out.println("ENTERED STUDENTS SECTION");
-                        fillData.insertStudentData(data);
+                        manageData.insertStudentData(data);
                         System.out.println("Student Entry Successful");
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -83,7 +86,7 @@ public class Main extends Application {
                     break;
                 case "Courses":
                     try {
-                        fillData.insertCoursesData(data);
+                        manageData.insertCoursesData(data);
                         System.out.println("Course Entry Successful");
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -91,7 +94,7 @@ public class Main extends Application {
                     break;
                 case "Classes":
                     try {
-                        fillData.insertStudentData(data);
+                        manageData.insertClassesData(data);
                         System.out.println("Class Entry Successful");
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -119,13 +122,13 @@ public class Main extends Application {
 
         deleteBtn.setOnAction(e -> {
             String tableToDeleteFrom = deleteTableInput.getText();
-            FillData fillData = new FillData();
+            ManageData manageData = new ManageData();
 
             switch (tableToDeleteFrom) {
                 case "Students": {
                     String input = deleteDataFieldsInput.getText();
                     try {
-                        fillData.deleteStudentData(input);
+                        manageData.deleteStudentData(input);
                         System.out.println("Student Deletion Successful");
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -135,7 +138,7 @@ public class Main extends Application {
                 case "Courses": {
                     String input = deleteDataFieldsInput.getText();
                     try {
-                        fillData.deleteCoursesData(input);
+                        manageData.deleteCoursesData(input);
                         System.out.println("Course Deletion Successful");
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -146,7 +149,7 @@ public class Main extends Application {
                     String input = deleteDataFieldsInput.getText();
                     List<String> inputs = Arrays.asList(input.trim().split("\\s*,\\s*"));
                     try {
-                        fillData.deleteClassesData(inputs);
+                        manageData.deleteClassesData(inputs);
                         System.out.println("Class Deletion Successful");
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -235,20 +238,6 @@ public class Main extends Application {
         group.getChildren().add(canvas);
         border.setCenter(group);
 
-        // Creating tables and filling the tables
-        Table schoolDB = new Table();
-        schoolDB.createStudentTable();
-        schoolDB.createCoursesTable();
-        schoolDB.createClassesTable();
-
-        FillData data = new FillData();
-        List<List<String>> students = data.readData("./data/students.csv");
-        List<List<String>> courses = data.readData("./data/courses.csv");
-        List<List<String>> classes = data.readData("./data/classes.csv");
-        data.insertStudentData(students);
-        data.insertCoursesData(courses);
-        data.insertClassesData(classes);
-
         Scene scene = new Scene(border, w, h);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -257,6 +246,36 @@ public class Main extends Application {
 
 
     public static void main(String[] args) throws Exception {
+        // Creating tables and filling the tables
+        Table schoolDB = new Table();
+        schoolDB.createStudentTable();
+        schoolDB.createCoursesTable();
+        schoolDB.createClassesTable();
+
+        ManageData data = new ManageData();
+
+        Connection conn = ConnectDB.getConnection();
+
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Students");
+        ResultSet rs = stmt.executeQuery();
+        if (!rs.next()) {
+            List<List<String>> students = data.readData("./data/students.csv");
+            data.insertStudentData(students);
+        }
+
+        stmt = conn.prepareStatement("SELECT * FROM Courses");
+        rs = stmt.executeQuery();
+        if (!rs.next()) {
+            List<List<String>> courses = data.readData("./data/courses.csv");
+            data.insertCoursesData(courses);
+        }
+
+        stmt = conn.prepareStatement("SELECT * FROM Classes");
+        rs = stmt.executeQuery();
+        if (!rs.next()) {
+            List<List<String>> classes = data.readData("./data/classes.csv");
+            data.insertClassesData(classes);
+        }
         launch(args);
     }
 }
