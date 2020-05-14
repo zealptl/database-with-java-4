@@ -6,10 +6,13 @@ import java.sql.ResultSet;
 import java.util.LinkedHashMap;
 
 public class RetrieveData {
+
+    // Retrieves data depending upon inputs received from the form and puts them in a hash map
     public LinkedHashMap<String, Integer> getData(String course, String year, String semester) throws Exception {
 
         PreparedStatement stmt = null;
 
+        // Checks combination of 'all'
         if(course.equals("all") && !year.equals("all") && !semester.equals("all")) {
             stmt = retrieveAllCourse(year, semester);
         } else if (!course.equals("all") && year.equals("all") && !semester.equals("all")) {
@@ -29,7 +32,6 @@ public class RetrieveData {
         }
 
         ResultSet rs = stmt.executeQuery();
-        System.out.println(rs);
 
         if (!rs.next()) {
             System.out.println("Data Not Found :(");
@@ -48,12 +50,96 @@ public class RetrieveData {
                 gpaData.put(gpa, gpaData.get(gpa) + 1);
             }
 
-            System.out.println(gpaData);
-
             return gpaData;
         }
     }
 
+
+    // Helper methods to retrieve data depending on keyword all.
+    private PreparedStatement retrieveAllCourse(String year, String semester) throws Exception {
+        Connection conn = ConnectDB.getConnection();
+        String query = "SELECT GPA FROM Classes where year = ? && semester = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1, year);
+        stmt.setString(2, semester);
+
+        return stmt;
+    }
+
+    // Helper methods to retrieve data depending on keyword all.
+    private PreparedStatement retrieveAllYear(String courseID, String semester) throws Exception {
+        Connection conn = ConnectDB.getConnection();
+        String query = "SELECT GPA FROM Classes WHERE courseID = ? && semester = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1,courseID);
+        stmt.setString(2,semester);
+
+        return stmt;
+    }
+
+    // Helper methods to retrieve data depending on keyword all.
+    private PreparedStatement retrieveAllSemester(String courseID, String year) throws Exception {
+        Connection conn = ConnectDB.getConnection();
+        String query = "SELECT GPA FROM Classes WHERE courseID = ? && year = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1,courseID);
+        stmt.setString(2,year);
+
+        return stmt;
+    }
+
+    // Helper methods to retrieve data depending on keyword all.
+    private PreparedStatement retrieveAllCouurseYear(String semester) throws Exception {
+        Connection conn = ConnectDB.getConnection();
+        String query = "SELECT GPA FROM Classes WHERE semester = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1,semester);
+
+        return stmt;
+    }
+
+    // Helper methods to retrieve data depending on keyword all.
+    private PreparedStatement retrieveAllCourseSemester(String year) throws Exception {
+        Connection conn = ConnectDB.getConnection();
+        String query = "SELECT GPA FROM Classes WHERE year = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1,year);
+
+        return stmt;
+    }
+
+    // Helper methods to retrieve data depending on keyword all.
+    private PreparedStatement retrieveAllYearSemester(String courseID) throws Exception {
+        Connection conn = ConnectDB.getConnection();
+        String query = "SELECT GPA FROM Classes WHERE courseID = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1,courseID);
+
+        return stmt;
+    }
+
+    // Helper methods to retrieve data depending on keyword all.
+    private PreparedStatement retrieveAllGPA() throws Exception {
+        Connection conn = ConnectDB.getConnection();
+        String query = "SELECT GPA FROM Classes";
+        PreparedStatement stmt = conn.prepareStatement(query);
+
+        return stmt;
+    }
+
+    // Helper methods to retrieve data depending on keyword all.
+    private PreparedStatement retrieve(String courseID, String year, String semester) throws Exception {
+        Connection conn = ConnectDB.getConnection();
+        String query = "SELECT GPA FROM Classes WHERE courseID = ? && year = ? && semester = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1,courseID);
+        stmt.setString(2,year);
+        stmt.setString(3,semester);
+
+        return stmt;
+    }
+
+    // Retrieves data from all fields from a table to display it to the console
     public void retrieveEntireTable(String tableName) throws Exception {
         Connection conn = ConnectDB.getConnection();
         String query;
@@ -85,7 +171,7 @@ public class RetrieveData {
                 break;
             case "Courses":
                 while (rs.next()) {
-                    System.out.println("Course ID: " + rs.getString("courseID") + ", Courses Title: " + rs.getString("Course Title: ") +
+                    System.out.println("Course ID: " + rs.getString("courseID") + ", Courses Title: " + rs.getString("CourseTitle") +
                             ", Department: " + rs.getString("department"));
                 }
                 break;
@@ -98,84 +184,6 @@ public class RetrieveData {
                 break;
         }
 
-    }
-
-    private PreparedStatement retrieveAllCourse(String year, String semester) throws Exception {
-        Connection conn = ConnectDB.getConnection();
-        String query = "SELECT GPA FROM Classes where year = ? && semester = ?";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setString(1, year);
-        stmt.setString(2, semester);
-
-        return stmt;
-    }
-
-    private PreparedStatement retrieveAllYear(String courseID, String semester) throws Exception {
-        Connection conn = ConnectDB.getConnection();
-        String query = "SELECT GPA FROM Classes WHERE courseID = ? && semester = ?";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setString(1,courseID);
-        stmt.setString(2,semester);
-
-        return stmt;
-    }
-
-    private PreparedStatement retrieveAllSemester(String courseID, String year) throws Exception {
-        Connection conn = ConnectDB.getConnection();
-        String query = "SELECT GPA FROM Classes WHERE courseID = ? && year = ?";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setString(1,courseID);
-        stmt.setString(2,year);
-
-        return stmt;
-    }
-
-
-
-    private PreparedStatement retrieveAllCouurseYear(String semester) throws Exception {
-        Connection conn = ConnectDB.getConnection();
-        String query = "SELECT GPA FROM Classes WHERE semester = ?";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setString(1,semester);
-
-        return stmt;
-    }
-
-    private PreparedStatement retrieveAllCourseSemester(String year) throws Exception {
-        Connection conn = ConnectDB.getConnection();
-        String query = "SELECT GPA FROM Classes WHERE year = ?";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setString(1,year);
-
-        return stmt;
-    }
-
-    private PreparedStatement retrieveAllYearSemester(String courseID) throws Exception {
-        Connection conn = ConnectDB.getConnection();
-        String query = "SELECT GPA FROM Classes WHERE courseID = ?";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setString(1,courseID);
-
-        return stmt;
-    }
-
-    private PreparedStatement retrieveAllGPA() throws Exception {
-        Connection conn = ConnectDB.getConnection();
-        String query = "SELECT GPA FROM Classes";
-        PreparedStatement stmt = conn.prepareStatement(query);
-
-        return stmt;
-    }
-
-    private PreparedStatement retrieve(String courseID, String year, String semester) throws Exception {
-        Connection conn = ConnectDB.getConnection();
-        String query = "SELECT GPA FROM Classes WHERE courseID = ? && year = ? && semester = ?";
-        PreparedStatement stmt = conn.prepareStatement(query);
-        stmt.setString(1,courseID);
-        stmt.setString(2,year);
-        stmt.setString(3,semester);
-
-        return stmt;
     }
 
 }

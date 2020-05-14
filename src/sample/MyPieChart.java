@@ -53,7 +53,6 @@ public class MyPieChart extends MyShape {
             totalStudent += val;
         }
 
-        double degreePerPerson = (double) 360 / totalStudent;
 
         //Variables to create the legend
         int rectX = 850;
@@ -72,7 +71,8 @@ public class MyPieChart extends MyShape {
         for (Map.Entry<String, Integer> entry : pieChartData.entrySet()) {
 
             // Drawing the pie chart slices
-            arcAngle = entry.getValue() * degreePerPerson;
+            double probability = (double) entry.getValue() / totalStudent;
+            arcAngle = probability * 360;
             gc.setFill(color.getRandomColor());
             gc.setFont(new Font("Arial", 15));
             gc.fillArc(x * 0.8, y * 0.02, xLength, yLength, startAngle, arcAngle, ArcType.ROUND);
@@ -81,12 +81,12 @@ public class MyPieChart extends MyShape {
             //Creating legend by creating a rectangle of appropriate color and putting appropriate values
             if (yCord > xCord && rectY > xCord) {
                 gc.fillRect(x_label, y_label, 50, 30);
-                gc.fillText(entry.getKey() + ", " + (int) Math.round(entry.getValue() * 10000) / 10000, x_label2, y_label2);
+                gc.fillText(entry.getKey() + ", " + Math.round(probability * 10000) / 10000, x_label2, y_label2);
                 y_label2 += 40;
                 y_label += 40;
             } else {
                 gc.fillRect(rectX, rectY, 50, 30);
-                gc.fillText(entry.getKey() + ", " + (int) Math.round(entry.getValue() * 10000) / 10000, xCord, yCord);
+                gc.fillText(entry.getKey() + ", " + (double) Math.round(probability  * 10000) / 10000, xCord, yCord);
                 rectY += 40;
                 yCord += 40;
             }

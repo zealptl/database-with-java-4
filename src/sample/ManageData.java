@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ManageData {
+
+    // Read data from CSV file and put it in a 2D list
     public List<List<String>> readData(String path) throws IOException {
         List<List<String>> records = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
@@ -22,6 +24,7 @@ public class ManageData {
         return records;
     }
 
+    // Inserts data read from CSV to the student table
     public void insertStudentData(List<List<String>> data) throws Exception {
         Connection conn = ConnectDB.getConnection();
         String query = "INSERT INTO Students (studentID, firstName, lastName, email, sex)" + "VALUES(?, ?, ?, ?, ?)";
@@ -39,6 +42,7 @@ public class ManageData {
         conn.close();
     }
 
+    // Inserts data read from CSV to the courses table
     public void insertCoursesData(List<List<String>> data) throws Exception {
         Connection conn = ConnectDB.getConnection();
         String query = "INSERT INTO Courses (courseId, courseTitle, department)" + "VALUES(?, ?, ?)";
@@ -53,6 +57,7 @@ public class ManageData {
         conn.close();
     }
 
+    // Inserts data read from CSV to the classes table
     public void insertClassesData(List<List<String>> data) throws Exception {
         Connection conn = ConnectDB.getConnection();
         String query = "INSERT INTO Classes (courseID, courseSection, studentID, year, Semester, GPA)" + "VALUES(?, ?, ?, ?, ?, ?)";
@@ -70,6 +75,7 @@ public class ManageData {
         conn.close();
     }
 
+    // Deletes row from student table with matching primary key
     public void deleteStudentData(String data) throws Exception {
         Connection conn = ConnectDB.getConnection();
         String query = "DELETE FROM Students WHERE studentID = ?";
@@ -79,6 +85,7 @@ public class ManageData {
         conn.close();
     }
 
+    // Deletes row from courses table with matching primary key
     public void deleteCoursesData(String data) throws Exception {
         Connection conn = ConnectDB.getConnection();
         String query = "DELETE FROM Courses WHERE courseID = ?";
@@ -88,6 +95,7 @@ public class ManageData {
         conn.close();
     }
 
+    // Deletes row from classes table with matching primary keys
     public void deleteClassesData(List<String> data) throws Exception {
         Connection conn = ConnectDB.getConnection();
         String query = "DELETE FROM Classes WHERE courseID = ? &&  courseSection = ? && studentID = ?";

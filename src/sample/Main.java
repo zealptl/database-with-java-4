@@ -63,6 +63,7 @@ public class Main extends Application {
 
         inputMenu.getChildren().addAll(addTable, tableInput, dataFields, dataFieldsInput, insertBtn);
 
+        // Insert data to a table when button is click
         insertBtn.setOnAction(e -> {
             String tableToInsert = tableInput.getText();
             String input = dataFieldsInput.getText();
@@ -70,9 +71,7 @@ public class Main extends Application {
             List<List<String>> data = new ArrayList<>();
             data.add(inputs);
 
-
             ManageData manageData = new ManageData();
-
 
             switch (tableToInsert) {
                 case "Students":
@@ -120,6 +119,7 @@ public class Main extends Application {
 
         Button deleteBtn = new Button("Delete");
 
+        // Delete a row from table when button is clicked
         deleteBtn.setOnAction(e -> {
             String tableToDeleteFrom = deleteTableInput.getText();
             ManageData manageData = new ManageData();
@@ -183,7 +183,7 @@ public class Main extends Application {
         Button addBtn = new Button("Enter");
         inputMenu.getChildren().addAll(courseLabel, courseField, yearLabel, yearField, semesterLabel, semesterField, addBtn);
 
-        // Event listener to listen for button click and then draw pie chart
+        // Retrieve data from the data base with appropriate queries and draw the pie chart
         addBtn.setOnAction(e -> {
             RetrieveData retrieve = new RetrieveData();
             String courseInput = courseField.getText();
@@ -223,6 +223,7 @@ public class Main extends Application {
 
         inputMenu.getChildren().addAll(tableToDisplay, tableToDisplayInput, displayBtn);
 
+        // Retrieve the entire table form data base and display it to the console
         displayBtn.setOnAction(e -> {
             String table = tableToDisplayInput.getText();
             RetrieveData rd = new RetrieveData();
@@ -231,8 +232,8 @@ public class Main extends Application {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            tableToDisplayInput.clear();
         });
-
 
         // Adding group to center of layout to draw the pie chart
         group.getChildren().add(canvas);
@@ -252,10 +253,10 @@ public class Main extends Application {
         schoolDB.createCoursesTable();
         schoolDB.createClassesTable();
 
+        Connection conn = ConnectDB.getConnection();
         ManageData data = new ManageData();
 
-        Connection conn = ConnectDB.getConnection();
-
+        // Checks if student table is empty in the database. If not only then read from csv file and insert it to the table
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Students");
         ResultSet rs = stmt.executeQuery();
         if (!rs.next()) {
@@ -263,6 +264,7 @@ public class Main extends Application {
             data.insertStudentData(students);
         }
 
+        // Checks if courses table is empty in the database. If not only then read from csv file and insert it to the table
         stmt = conn.prepareStatement("SELECT * FROM Courses");
         rs = stmt.executeQuery();
         if (!rs.next()) {
@@ -270,6 +272,7 @@ public class Main extends Application {
             data.insertCoursesData(courses);
         }
 
+        // Checks if classes table is empty in the database. If not only then read from csv file and insert it to the table
         stmt = conn.prepareStatement("SELECT * FROM Classes");
         rs = stmt.executeQuery();
         if (!rs.next()) {
